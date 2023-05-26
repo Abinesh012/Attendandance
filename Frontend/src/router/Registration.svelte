@@ -1,18 +1,15 @@
 <script>
-  //   import { select_options } from 'svelte/internal';
-  import Dropdown from './Dropdown.svelte';
   import { push } from 'svelte-spa-router';
   import axios from 'axios';
 
   let roll_number = '';
   let email = '';
-  let phone = '';
+  let phone_number = '';
   let first_name = '';
   let last_name = '';
   let password = '';
   let department = '';
-  let user_type = '';
-  let selectedOption = null;
+  let selectedOption = 'Select an option';
   let isOpen = false;
 
   function goto() {
@@ -28,7 +25,7 @@
     console.log('Password:', password);
     console.log('Department', department);
     console.log('rollno', roll_number);
-    console.log('usertyper', user_type);
+    console.log('usertyper', selectedOption);
   }
 
   const fetch = async () => {
@@ -36,34 +33,25 @@
       method: 'post',
       url: 'http://192.168.1.240:5000/api/signup',
       data: {
-        email: email,
-        phone: phone,
+        roll_number: roll_number,
         first_name: first_name,
         last_name: last_name,
         department: department,
-        roll_number: roll_number,
-        user_type: user_type,
+        user_type: selectedOption,
+        email: email,
+        phone_number: phone_number,
         password: password,
       },
     });
-    console.log(res.data);
-    if (res.data.user_type == 'student') {
-      push('/home');
-    } else if (res.data.user_type == 'staff') {
-      push('/staff');
-    } else if (res.data.user_type == 'hod') {
-      push('/hod');
-    } else {
-      alert('Invalid');
-    }
+    push('/login');
   };
 
   function toggleDropdown() {
     isOpen = !isOpen;
   }
 
-  function selectOption(user_type) {
-    selectedOption = user_type;
+  function selectOption(option) {
+    selectedOption = option;
     isOpen = false;
   }
 </script>
@@ -71,11 +59,8 @@
 <main>
   <form on:submit|preventDefault={fetch}>
     <div>
-      <label for="email">Email:</label>
-      <input type="text" id="emailid" bind:value={email} required />
-
-      <label for="phonenumber">Phone Number:</label>
-      <input type="text" id="phonenumber" bind:value={phone} required />
+      <label for="rollno">Roll Number:</label>
+      <input type="text" id="rollnumber" bind:value={roll_number} required />
 
       <label for="firstname">First Name:</label>
       <input type="text" id="firstname" bind:value={first_name} required />
@@ -83,19 +68,13 @@
       <label for="lastname">Last Name:</label>
       <input type="text" id="lastname" bind:value={last_name} required />
 
-      <label for="rollno">Roll Number:</label>
-      <input type="text" id="rollnumber" bind:value={roll_number} required />
-
       <label for="department">Department:</label>
       <input type="text" id="department" bind:value={department} required />
 
-      <label for="password">Password:</label>
-      <input type="password" id="password" bind:value={password} required />
-
-      <div class="dropdown">
-        <button class="dropdown__button" on:click={toggleDropdown} required>
-          {selectedOption ? selectedOption : 'Select an option'}
-        </button>
+      <div class="dropdown" on:click={toggleDropdown}>
+        <div class="dropdown__button">
+          {selectedOption}
+        </div>
 
         {#if isOpen}
           <ul class="dropdown__list">
@@ -112,6 +91,15 @@
         {/if}
       </div>
 
+      <label for="email">Email:</label>
+      <input type="text" id="emailid" bind:value={email} required />
+
+      <label for="phonenumber">Phone Number:</label>
+      <input type="text" id="phone" bind:value={phone_number} required />
+
+      <label for="password">Password:</label>
+      <input type="password" id="password" bind:value={password} required />
+
       <button type="submit">Register</button>
     </div>
   </form>
@@ -125,10 +113,6 @@
     justify-content: center;
     height: 100vh;
     font-family: Arial, sans-serif;
-  }
-
-  h1 {
-    margin-bottom: 1rem;
   }
 
   form {
@@ -167,32 +151,21 @@
     display: inline-block;
   }
 
-  .dropdown__button {
-    padding: 0.5rem 1rem;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
   .dropdown__list {
     position: absolute;
     top: 100%;
     left: 0;
     width: 100%;
-    padding: 0;
-    margin: 0;
+    padding: 0.5rem;
     background-color: #fff;
     border: 1px solid #ccc;
     border-radius: 4px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    /* display: {isOpen ? "block" : "none"};
-    list-style: none; */
+    /* display:  isopen? "block" : 'none'; */
   }
 
   .dropdown__item {
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 0.5rem;
     cursor: pointer;
   }
 

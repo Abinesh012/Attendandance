@@ -1,10 +1,10 @@
 <script>
   let attendees = [
-    { id: 1, name: 'John Doe', status: 'Present' },
-    { id: 2, name: 'Jane Smith', status: 'Absent' },
-    { id: 3, name: 'Robert Johnson', status: 'Present' },
-    { id: 4, name: 'Emily Davis', status: 'Present' },
-    { id: 5, name: 'Michael Wilson', status: 'Absent' },
+    { id: 1, name: 'John Doe', department:'MSc',status: 'Present' },
+    { id: 2, name: 'Jane Smith',department:'MSc',status: 'Absent' },
+    { id: 3, name: 'Robert Johnson',department:'MSc', status: 'Present' },
+    { id: 4, name: 'Emily Davis', department:'MSc',status: 'Present' },
+    { id: 5, name: 'Michael Wilson',department:'MSc', status: 'Absent' },
   ];
 
   function updateStatus(id, newStatus) {
@@ -25,6 +25,7 @@
       <tr>
         <th>ID</th>
         <th>Name</th>
+        <th>Department</th>
         <th>Status</th>
         <th>Action</th>
       </tr>
@@ -34,6 +35,7 @@
         <tr>
           <td>{attendee.id}</td>
           <td>{attendee.name}</td>
+          <td>{attendee.department}</td>
           <td>{attendee.status}</td>
           <td>
             <button on:click={() => updateStatus(attendee.id, 'Present')}
